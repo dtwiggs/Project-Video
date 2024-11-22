@@ -1,4 +1,5 @@
     import express from "express";
+    import ffmpeg from "fluent-ffmpeg";
     import { convertVideo, deleteProcessedVideo, deleteRawVideo, downloadRawVideo, setupDirectories, uploadProcessedVideo } from "./storage";
 
     setupDirectories();
@@ -6,7 +7,7 @@
     const app = express();
     app.use(express.json());
 
-    app.post("/process-video", async (req, res) => {
+    app.post("/process-video", async (req, res): Promise<any> => {
         // Get the bucket and filename from a Cloud Pub/Sub message
         let data;
         try {
@@ -44,8 +45,8 @@
             deleteRawVideo(inputFileName),
             deleteProcessedVideo(outputFileName)
         ]);
-
-        return res.status(200).send('Video processed successfully.')
+        
+        return res.status(200).send('Processing finished successfully');
     });
 
     // vv Helpful for deployment, the environment may specify a different port
